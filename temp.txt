@@ -1,3 +1,23 @@
 make differnt lists for bowlers, batters, all rounders, ask for each role to input
 subsitutes
 
+
+game sequence
+2 teams
+each team players
+each over
+decide striker, non striker, bowler
+each ball of an over: decice what the ball should be leg wide no ball
+each ball faced by batsman: decide to run-> ask how much rnu the batsman wil run( keep in find the strike change) or 4 or 6 or leave ball or give wicket
+
+(need to decide who will decide that there is wicket, or can use the random)
+if there is wide, no ball, free hit
+end of an over: display the score card of each over (6 balls)
+after overs, 1st inning is finished, display the scorecard
+same process for 2nd inning
+
+check the scores
+if matches superover
+
+//not considerting this as test match
+finally, the match result

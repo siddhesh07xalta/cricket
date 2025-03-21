@@ -1,15 +1,45 @@
+from player import Player
 
 def take_team_details():
-    team_1 = {}
-    team_2 = {}
+    try:
+        team_1 = {}
+        
+        for player in range(3):
+            player_name = input(f"Enter name for player {player+1}:").strip()
+            print("Select role")
+            print("1.Batsman")
+            print("2.Bowler")
+            print("3.All Rounder")
+            print("4.Wicket Keeper")
+            print("5.Captain")
 
-    
-    for player in range(15):
-        team_1.append()
+            role_choice = input("Enter role number").strip()
 
+            role_dict = {
+                "1":"Batsman",
+                "2":"Bowler",
+                "3":"All Rounder",
+                "4":"Wicket Keeper",
+                "5":"Captain",
+                }
 
-    return team_1, team_2
+            role = role_dict.get(role_choice)
 
+            player = Player(player_name,role)
+            
+            team_1[player_name] = player
+
+            for player in team_1.values():
+                print(player)
+
+    except Exception as e:
+        print(f'Error while taking input for team players, Error is {e}')
 
 def display_menu():
     print("----Cricket Game----")
+
+def validate_input():
+    try:
+        pass
+    except Exception as e:
+        print(e)
