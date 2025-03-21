@@ -1,8 +1,8 @@
 from utils import take_team_details
-from utils import display_menu
+from utils import display_main_menu
 
 def main():
-    display_menu()
+    # display_main_menu()
     take_team_details()
 
 main()

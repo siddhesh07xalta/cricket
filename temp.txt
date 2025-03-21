@@ -19,5 +19,34 @@ same process for 2nd inning
 check the scores
 if matches superover
 
-//not considerting this as test match
+
+umpire will decide out or not third party view
+
+
+
+scorecard after each match, bowler change after each over, 
+take user input for each thing(whether it is (1,2,3,4,5,6) runs, 4, 6 or wicket or wide or noball)
+
+
+can take two things
+1. random selection of shots
+2. take input from user
+
+not considerting this as test match
 finally, the match result
+
+take a list of commentary (make different sections) and randomize in between the print
+
+player of the match
+highest wicket taker
+
+print status of each ball
+
+can caclulate strike rate of batsman
+economy of bowler
+singles
+doubles
+4s 6s 
+
+
+check match facts page on crickbuzz
