@@ -51,11 +51,6 @@ def display_main_menu():
     print("--Exit--")
 
 
-# def display_sub_menu():
-#     print("Enter team players")
-
-
-
 def validate_input():
     try:
         pass
