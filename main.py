@@ -1,9 +1,7 @@
-from utils import take_team_details
+from game import Game
 
 def main():
-    # display_main_menu()
-    # take_team_details()
-    pass
+    game = Game()
+    game.start_game()
 
-
-# main()
+main()
