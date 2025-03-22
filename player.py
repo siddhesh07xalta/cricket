@@ -5,6 +5,7 @@ class Player:
         self.runs = 0
         self.wickets = 0
         self.balls_faced = 0
+        self.is_out = False
         self.overs_bowled = 0
         self.runs_conceded = 0
         self.sixes = 0
@@ -12,7 +13,18 @@ class Player:
         self.strike_rate = 0
         self.economy = 0
 
+    def bat(self):
+        pass
+
+    def bowl(self):
+        pass
+
+    def wicket(self):
+        pass
+    
     def __str__(self):
         return f'{self.name}-{self.role}' 
+
+
 
     
