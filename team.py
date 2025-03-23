@@ -5,33 +5,22 @@ class Team:
         self.name = name
         self.players = {}
         self.score = 0
-        self.wickets_lost = 0
+        self.wickets = 0
         self.overs_played = 0
-        self.sixes = 0
-        self.fours = 0
 
-
-    def add_player(self):
-        # player = input(f"Enter player name you wanto to end for team {self.name}: ")
-        
+    def add_player(self):        
         try: 
             for player in range(3):
                 player_name = input(f"Enter name for player {player+1}: ").strip()
                 print("Select role")
                 print("1.Batsman")
                 print("2.Bowler")
-                print("3.All Rounder")
-                print("4.Wicket Keeper")
-                print("5.Captain")
 
-                role_choice = input("Enter role number").strip()
+                role_choice = input("Enter role number: ").strip()
 
                 role_dict = {
                     "1":"Batsman",
-                    "2":"Bowler",
-                    "3":"All Rounder",
-                    "4":"Wicket Keeper",
-                    "5":"Captain",
+                    "2":"Bowler"
                 }
 
                 role = role_dict.get(role_choice)
@@ -43,31 +32,68 @@ class Team:
         except Exception as e:
             print(f'Error while taking input for team players, Error is {e}')
 
+
+    def get_available_batsmen(self, exclude=[]):
+        pass
+    
     def get_available_bowlers(self):
         pass
 
-    def get_available_batsmen(self):
+
+    def select_openers(self):
+        print(f"\nSelect opening batsmen for {self.name}:")
+        
+        # Display all players in the team with their index
+        index = 1
+        for player in self.players:
+            print(player, index)
+            index+=1
+
+        # Take input for opener
+        while True:
+            try:
+                striker_index = int(input("Select the Striker (enter number): ")) - 1
+                if striker_index > 0 and striker_index <= len(self.players):
+                    striker = list(self.players.keys())[striker_index - 1]
+                    striker = self.players[striker]
+                    break
+                else:
+                    print("Invalid selection. Please select a valid player number.")
+            except ValueError:
+                print("Invalid input! Enter a number.")
+
+        while True:
+            try:
+                non_striker_index = int(input("Select the Non Striker (enter number): ")) - 1
+                if non_striker_index > 0 and non_striker_index <= len(self.players):
+                    non_striker = list(self.players.keys())[non_striker_index - 1]
+                    non_striker = self.players[non_striker]
+                    break
+                else:
+                    print("Invalid selection. Please select a valid player number.")
+            except ValueError:
+                print("Invalid input! Enter a number.")
+
+        print(f"\nOpening pair for {self.name}: {striker.name} (Striker), {non_striker.name} (Non-Striker)")
+
+        return striker, non_striker
+    
+
+    def select_next_batsman(self, striker, non_striker):
+        pass
+    
+    def select_bowler(self, previous_bowler):
         pass
 
-    def increment_score(self):
-        pass
+    def update_score(self, runs):
+        self.score += runs
 
-    def wickets_lost(self):
-        pass
+    def increment_wickets(self):
+        self.wickets += 1
 
+    def display_scoreboard(self):
+        print("display scoreboard")
 
-   
     def __str__(self):
         player_info = "\n".join([str(player) for player in self.players.values()])
         return f"Team: {self.name}\n Players: \n{player_info}"
-    
-    # def print_team_members(self):
-
-    #     # for x in self.players:
-    #     #     print(x)
-    #     #     for y in self.players[x]:
-    #     #         print(y, ':', self.players[x][y])
-    #     for key, value in self.players():
-    #         print(f"Key: {key}, Value: {value}")
-    
-    
