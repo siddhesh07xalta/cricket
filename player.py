@@ -1,6 +1,6 @@
 class Player:
     def __init__(self, name, role):
-        self.name  = name
+        self.name = name
         self.role = role
         self.runs = 0
         self.wickets_taken = 0
@@ -22,11 +22,9 @@ class Player:
 
     def wicket(self):
         self.wickets_taken += 1
-        pass
-    
+
+    def set_overs_bowled(self):
+        self.overs_bowled += 1
+
     def __str__(self):
-        return f'{self.name}-{self.role} Runs: {self.runs}, Balls Faced: {self.balls_faced}, Wickets Taken: {self.wickets_taken} ' 
-
-
-
-    
+        return f'{self.name}-{self.role} Runs: {self.runs}, Balls Faced: {self.balls_faced}, Wickets Taken: {self.wickets_taken} '

@@ -1,6 +1,3 @@
-from player import Player
-from team import Team
-
 # def take_team_details():
 #     try:
 #         team_1 = {}
@@ -45,14 +42,14 @@ from team import Team
 #     except Exception as e:
 #         print(f'Error while taking input for team players, Error is {e}')
 
-def display_main_menu():
-    print("----Cricket Game----")
-    print("--Play Game--")
-    print("--Exit--")
+# def display_main_menu():
+#     print("----Cricket Game----")
+#     print("--Play Game--")
+#     print("--Exit--")
 
 
-def validate_input():
-    try:
-        pass
-    except Exception as e:
-        print(e)
+# def validate_input():
+#     try:
+#         pass
+#     except Exception as e:
+#         print(e)
