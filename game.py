@@ -30,14 +30,14 @@ class Game:
         print(f"\n--- First Innings: {self.batting_team.name} batting ---\n")
         self.play_innings(self.batting_team, self.bowling_team)
 
-        # self.target_score = self.batting_team.score + 1
-        # print(f"\nTarget for {self.bowling_team.name}: {self.target_score} runs to win\n")
+        self.target_score = self.batting_team.score + 1
+        print(f"\nTarget for {self.bowling_team.name}: {self.target_score} runs to win\n")
 
-        # # Second Innings
-        # self.batting_team, self.bowling_team = self.bowling_team, self.batting_team
+        # Second Innings
+        self.batting_team, self.bowling_team = self.bowling_team, self.batting_team
 
-        # print(f"\n--- Second Innings: {self.batting_team.name} batting ---\n")
-        # self.play_innings(self.batting_team, self.bowling_team)
+        print(f"\n--- Second Innings: {self.batting_team.name} batting ---\n")
+        self.play_innings(self.batting_team, self.bowling_team)
 
         # # Show results
         # self.display_results()
@@ -56,12 +56,11 @@ class Game:
             print(f"\nEnter details for {team_1_name}:")
             # function to add players
             self.team1.add_player()
-            print(self.team1)
+            print()
 
             print(f"\nEnter details for {team_2_name}:")
             self.team2.add_player()
-            print(self.team2)
-        
+            print()
         except Exception as e:
             print(f'Error in setup teams function: {e}')
 
@@ -105,6 +104,7 @@ class Game:
                     print(f'Innings Over ! {batting_team.name} is all out')
                     break
         
+                print()
                 print(f'Over Number {over_number}')
             
                 bowler = bowling_team.select_bowler(previous_bowler)
@@ -116,7 +116,12 @@ class Game:
                 # function that simulates playing over
                 over.play_over()
 
+                # adding over count to team function
+                batting_team.overs_played += 1
 
+                # print batting dashboard after every over
+                batting_team.display_scoreboard()
+        
         except Exception as e:
             print(f'Error in play innings function: {e}')
 

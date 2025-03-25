@@ -15,9 +15,9 @@ class Over:
         print(f"\n*** {self.bowler.name} is bowling ***")
 
         while legal_balls < 6:
-            print(f"\n Over {self.over_number} Ball {legal_balls + 1}: Bowler: {self.bowler.name} | Striker: {self.striker.name} | Non-Striker: {self.non_striker.name}")
-            ball_input = input(
-                "Enter runs scored (or 'W' for Wicket, 'WD' for Wide, 'NB' for No ball): ")
+            print(f"\n Over {self.over_number} Ball {legal_balls + 1}: Striker: {self.striker.name} | Non-Striker: {self.non_striker.name} | Bowler: {self.bowler.name} |")
+            # using normal input of validate input because of special case
+            ball_input = input("Enter runs scored (or 'W' for Wicket, 'WD' for Wide, 'NB' for No ball): ").strip()
 
             if ball_input.upper() == 'WD':
                 print("Wide ball! +1 run.")
@@ -43,12 +43,14 @@ class Over:
                 if len(next_batsman) == 0:
                     return 
                 
+                print()
                 print("Following are the available batsman")
                 for available_batsman in next_batsman:
                     print(available_batsman)
                 
                 self.all_players = self.batting_team.players
 
+                print()
                 next_batsman_name = validate_input("Enter batsman from above players: ", str)
 
                 # getting batsman object from the dictionary using name(key)
@@ -69,8 +71,14 @@ class Over:
                     self.batting_team.update_score(runs)
                     self.bowler.bowl(runs)
 
+                    print()
+                    print("Runs scored till now")
+                    print(f'{self.striker.name}:{self.striker.runs}')
+                    print(f'{self.non_striker.name}:{self.non_striker.runs}')
+
                     if runs % 2 == 1:
                         # Odd run: rotate strike
+                        print("strike change")
                         self.swap_strikers()
 
                     legal_balls += 1
@@ -79,7 +87,7 @@ class Over:
                     print(f'Issue while playing over. The issue is {e}')
 
         
-        # After the over ends, swap striker, non-striker again
+        print("strike change")
         self.swap_strikers()
 
     def swap_strikers(self):

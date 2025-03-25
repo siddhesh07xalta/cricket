@@ -13,9 +13,11 @@ class Team:
     def add_player(self):
         try:
             players = 11
+
+            # currently only 4 playeres, need to update it to 11
             for player in range(4):
                 player_name = validate_input(f"Enter name for player {player+1}: ", str)
-                
+                print()
                 print("Select role")
                 print("1.Batsman")
                 print("2.Bowler")
@@ -33,25 +35,11 @@ class Team:
 
                 self.players[player_name] = player
 
+            # print(self.players)
         except Exception as e:
             print(f'Error while taking input for team players, Error is {e}')
 
-    # def get_available_batsmen(self):
-    #     players_who_didnt_bat = []
-    #     print("---------")
-    #     for player2 in self.players_who_batted:
-    #         print(player2.name)
-    #     print(self.players_who_batted)
-    #     print(self.players)
-    #     for player in self.players:
-    #         if player not in self.players_who_batted:
-    #             players_who_didnt_bat.append(player)
-        
-    #     print("players who didnt bat")
-    #     for player3 in players_who_didnt_bat:
-    #         print(player3)
-    #     return players_who_didnt_bat
-               
+    # function to return list of batsmen who are not out and openers 
     def get_available_batsmen(self):
         result = []
         for player in self.players.keys():
@@ -64,9 +52,10 @@ class Team:
     def get_available_bowlers(self):
         pass
 
+    # function to select openers
     def select_openers(self):
         print(f"\nSelect opening batsmen for {self.name}:")
-
+        print()
         # Display all players in the team
         for player in self.players:
             print(player)
@@ -95,12 +84,12 @@ class Team:
         return self.striker, self.non_striker
 
     def select_next_batsman(self):
-        
         pass
 
     # the issue is that previous_bowler can bowl consecurtive overs
     def select_bowler(self, previous_bowler):
-        print(f'Select bolwer from following for {self.name} team')
+        print()
+        print(f'Select bowler from following {self.name} team')
 
         # self.players
 
@@ -118,6 +107,7 @@ class Team:
             
         while True:
             try:
+                print()
                 selected_bowler_name = validate_input("Enter the bowler ", str)
                 
                 selected_bowler = self.players[selected_bowler_name]
@@ -144,7 +134,13 @@ class Team:
         self.wickets += 1
 
     def display_scoreboard(self):
-        print("display scoreboard")
+        print()
+        print(f'--- Stats of {self.name} after {self.overs_played}---')
+        print()
+        print(f'Total Score: {self.score}')
+        print(f'Total Wickets: {self.wickets}')
+        print(f'Overs Played: {self.overs_played}  ')
+        print(f'Players who batted till now: {self.players_who_batted}')
 
     def __str__(self):
         player_info = "\n".join([str(player) for player in self.players.values()])
