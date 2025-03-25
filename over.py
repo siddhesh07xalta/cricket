@@ -1,24 +1,23 @@
 from utils import validate_input
 
 class Over:
-    def __init__(self, bowler, striker, non_striker, batting_team, bowling_team, game):
+    def __init__(self, bowler, striker, non_striker, batting_team, bowling_team, over_number):
         self.bowler = bowler
         self.striker = striker
         self.non_striker = non_striker
         self.batting_team = batting_team
         self.bowling_team = bowling_team
-        self.game = game
         self.balls_bowled = 0
+        self.over_number = over_number
 
     def play_over(self):
         legal_balls = 0
         print(f"\n*** {self.bowler.name} is bowling ***")
 
         while legal_balls < 6:
-            print(
-                f"\nBall {legal_balls + 1}: Bowler: {self.bowler.name} | Striker: {self.striker.name}")
-            ball_input = validate_input(
-                "Enter runs scored (or 'W' for Wicket, 'WD' for Wide, 'NB' for No ball): ", str)
+            print(f"\n Over {self.over_number} Ball {legal_balls + 1}: Bowler: {self.bowler.name} | Striker: {self.striker.name} | Non-Striker: {self.non_striker.name}")
+            ball_input = input(
+                "Enter runs scored (or 'W' for Wicket, 'WD' for Wide, 'NB' for No ball): ")
 
             if ball_input.upper() == 'WD':
                 print("Wide ball! +1 run.")
@@ -36,16 +35,32 @@ class Over:
                 print(f"{self.striker.name} is OUT!")
                 self.striker.is_out = True
                 self.batting_team.increment_wickets()
-                self.bowler.add_wicket()
+                self.bowler.wicket()
+                
+                # gets all the batsmen who are not out
+                next_batsman = self.batting_team.get_available_batsmen()
+ 
+                if len(next_batsman) == 0:
+                    return 
+                
+                print("Following are the available batsman")
+                for available_batsman in next_batsman:
+                    print(available_batsman)
+                
+                self.all_players = self.batting_team.players
 
-                # Select next batsman
-                next_batsman = self.batting_team.select_next_batsman(
-                    self.striker, self.non_striker)
-                # if not next_batsman:
-                #     print("All batsmen are out! End of innings.")
-                #     break
-                # self.striker = next_batsman
-                # legal_balls += 1
+                next_batsman_name = validate_input("Enter batsman from above players: ", str)
+
+                # getting batsman object from the dictionary using name(key)
+                next_batsman = self.all_players[next_batsman_name]
+                # setting the striker to new batsman object
+                self.striker = next_batsman
+
+                # appending the new striker to the list who have batted
+                self.batting_team.players_who_batted.append(next_batsman_name)
+
+                # increasing the balls
+                legal_balls += 1
 
             else:
                 try:
@@ -64,7 +79,7 @@ class Over:
                     print(f'Issue while playing over. The issue is {e}')
 
         
-        # After the over ends, swap striker/non-striker again
+        # After the over ends, swap striker, non-striker again
         self.swap_strikers()
 
     def swap_strikers(self):

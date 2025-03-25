@@ -8,11 +8,12 @@ class Team:
         self.score = 0
         self.wickets = 0
         self.overs_played = 0
+        self.players_who_batted = []
 
     def add_player(self):
         try:
             players = 11
-            for player in range(3):
+            for player in range(4):
                 player_name = validate_input(f"Enter name for player {player+1}: ", str)
                 
                 print("Select role")
@@ -35,8 +36,30 @@ class Team:
         except Exception as e:
             print(f'Error while taking input for team players, Error is {e}')
 
-    def get_available_batsmen(self, exclude=[]):
-        pass
+    # def get_available_batsmen(self):
+    #     players_who_didnt_bat = []
+    #     print("---------")
+    #     for player2 in self.players_who_batted:
+    #         print(player2.name)
+    #     print(self.players_who_batted)
+    #     print(self.players)
+    #     for player in self.players:
+    #         if player not in self.players_who_batted:
+    #             players_who_didnt_bat.append(player)
+        
+    #     print("players who didnt bat")
+    #     for player3 in players_who_didnt_bat:
+    #         print(player3)
+    #     return players_who_didnt_bat
+               
+    def get_available_batsmen(self):
+        result = []
+        for player in self.players.keys():
+            if player not in self.players_who_batted:
+                result.append(player)
+
+        return result
+
 
     def get_available_bowlers(self):
         pass
@@ -51,32 +74,38 @@ class Team:
         # Take input for opener
         while True:
             striker_name = validate_input("Enter the Striker Name: ", str)
-            striker = self.players[striker_name]
+            if striker_name not in self.players:
+                continue
+            self.striker = self.players[striker_name]
+            self.players_who_batted.append(self.striker.name)
             break
 
         # Take inpur for Non Striker
         while True:
             non_striker_name = validate_input("Enter the Non Striker Name: ", str)
-            non_striker = self.players[non_striker_name]
+            if non_striker_name not in self.players:
+                continue
+            self.non_striker = self.players[non_striker_name]
+            self.players_who_batted.append(self.non_striker.name)
             break
-            
+        
 
-        print(
-            f"\nOpening pair for {self.name}: {striker.name} (Striker), {non_striker.name} (Non-Striker)")
+        print(f"\nOpening pair for {self.name}: {self.striker.name} (Striker), {self.non_striker.name} (Non-Striker)")
 
-        return striker, non_striker
+        return self.striker, self.non_striker
 
     def select_next_batsman(self):
+        
         pass
 
     # the issue is that previous_bowler can bowl consecurtive overs
     def select_bowler(self, previous_bowler):
         print(f'Select bolwer from following for {self.name} team')
 
-        all_players = self.players
+        # self.players
 
-        for player_id in all_players:
-            player = all_players[player_id]
+        for player_id in self.players:
+            player = self.players[player_id]
 
             player_info = f'{player_id}: {player.role}, Overs Bowled: {player.overs_bowled}'
 
@@ -91,7 +120,7 @@ class Team:
             try:
                 selected_bowler_name = validate_input("Enter the bowler ", str)
                 
-                selected_bowler = all_players[selected_bowler_name]
+                selected_bowler = self.players[selected_bowler_name]
 
                 # print(selected_bowler)
 

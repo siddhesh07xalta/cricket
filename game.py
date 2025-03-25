@@ -98,23 +98,25 @@ class Game:
 
             previous_bowler = None
 
-            for over_number in range(1, self.overs+1):
-                print(f'{over_number}')
+            for over_number in range(0, self.overs):
+                
+                # change it here to 10
+                if batting_team.wickets == 3:
+                    print(f'Innings Over ! {batting_team.name} is all out')
+                    break
+        
+                print(f'Over Number {over_number}')
             
                 bowler = bowling_team.select_bowler(previous_bowler)
 
                 previous_bowler = bowler
-
-                if not bowler:
-                    print("Error while getting bowler")
-                    break
-                
                 # creating over objects with the required parameters
-                over = Over(bowler=bowler, striker=striker, non_striker=non_striker, batting_team=batting_team, bowling_team=bowling_team, game= self)
+                over = Over(bowler=bowler, striker=striker, non_striker=non_striker, batting_team=batting_team, bowling_team=bowling_team, over_number = over_number)
                 
                 # function that simulates playing over
                 over.play_over()
-        
+
+
         except Exception as e:
             print(f'Error in play innings function: {e}')
 

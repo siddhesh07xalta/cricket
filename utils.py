@@ -1,12 +1,18 @@
 def validate_input(prompt, data_type, min_value=None, max_value=None, allowed_values=None):
-    
+
     while True:
         try:
             user_input = input(prompt)
+            
             if data_type is int:
                 user_input = int(user_input)
             elif data_type is float:
                 user_input = float(user_input)
+            elif data_type is str:
+                if user_input.isalpha():
+                    user_input = str(user_input)
+                else:
+                    raise ValueError
 
             if min_value is not None and user_input < min_value:
                 print(f"Input must be greater than or equal to {min_value}.")
