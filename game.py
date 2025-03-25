@@ -1,7 +1,7 @@
 from team import Team
-from player import Player
 from over import Over
 import random
+from utils import validate_input
 
 class Game:
     def __init__(self, overs):
@@ -46,8 +46,8 @@ class Game:
     def setup_teams(self):
 
         try:
-            team_1_name = input("Enter Team 1 name: ")
-            team_2_name = input("Enter Team 2 name: ")
+            team_1_name = validate_input("Enter Team 1 name: ", str)
+            team_2_name = validate_input("Enter Team 2 name: ", str)
 
             # creating team objects
             self.team1 = Team(team_1_name)
@@ -72,7 +72,7 @@ class Game:
             toss_winner = random.choice([self.team1, self.team2])
             print(f"\n{toss_winner.name} won the toss!")
 
-            choice = int(input(f"What does {toss_winner.name} want to do?\n1. Bat\n0. Bowl\nChoice: "))
+            choice = validate_input(f"What does {toss_winner.name} want to do?\n1.Bat\n0.Bowl\nChoice: ", int, 0,1, (1,0))
 
             # conidition to select the batting team first
             if choice == 1:
@@ -106,11 +106,13 @@ class Game:
                 previous_bowler = bowler
 
                 if not bowler:
-                    print("issue with getting bowler")
+                    print("Error while getting bowler")
                     break
-
+                
+                # creating over objects with the required parameters
                 over = Over(bowler=bowler, striker=striker, non_striker=non_striker, batting_team=batting_team, bowling_team=bowling_team, game= self)
                 
+                # function that simulates playing over
                 over.play_over()
         
         except Exception as e:

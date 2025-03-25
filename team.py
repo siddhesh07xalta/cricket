@@ -1,5 +1,5 @@
 from player import Player
-
+from utils import validate_input
 
 class Team:
     def __init__(self, name):
@@ -11,18 +11,19 @@ class Team:
 
     def add_player(self):
         try:
+            players = 11
             for player in range(3):
-                player_name = input(
-                    f"Enter name for player {player+1}: ").strip()
+                player_name = validate_input(f"Enter name for player {player+1}: ", str)
+                
                 print("Select role")
                 print("1.Batsman")
                 print("2.Bowler")
 
-                role_choice = input("Enter role number: ").strip()
+                role_choice = validate_input("Enter role number: ", int, 1,2,(1,2))
 
                 role_dict = {
-                    "1": "Batsman",
-                    "2": "Bowler"
+                    1: "Batsman",
+                    2: "Bowler"
                 }
 
                 role = role_dict.get(role_choice)
@@ -49,31 +50,16 @@ class Team:
 
         # Take input for opener
         while True:
-            try:
-                striker_index = int(
-                    input("Select the Striker (enter number): ")) - 1
-                if striker_index >= 0 and striker_index <= len(self.players):
-                    striker = list(self.players.keys())[striker_index]
-                    striker = self.players[striker]
-                    break
-                else:
-                    print("Invalid selection. Please select a valid player number.")
-            except ValueError:
-                print("Invalid input! Enter a number.")
+            striker_name = validate_input("Enter the Striker Name: ", str)
+            striker = self.players[striker_name]
+            break
 
+        # Take inpur for Non Striker
         while True:
-            try:
-                non_striker_index = int(
-                    input("Select the Non Striker (enter number): ")) - 1
-                if non_striker_index >= 0 and non_striker_index <= len(self.players):
-                    non_striker = list(self.players.keys())[
-                        non_striker_index]
-                    non_striker = self.players[non_striker]
-                    break
-                else:
-                    print("Invalid selection. Please select a valid player number.")
-            except ValueError:
-                print("Invalid input! Enter a number.")
+            non_striker_name = validate_input("Enter the Non Striker Name: ", str)
+            non_striker = self.players[non_striker_name]
+            break
+            
 
         print(
             f"\nOpening pair for {self.name}: {striker.name} (Striker), {non_striker.name} (Non-Striker)")
@@ -103,11 +89,11 @@ class Team:
             
         while True:
             try:
-                selected_bowler_name = input("Enter the bowler ").strip()
+                selected_bowler_name = validate_input("Enter the bowler ", str)
                 
                 selected_bowler = all_players[selected_bowler_name]
 
-                print(selected_bowler)
+                # print(selected_bowler)
 
                 if previous_bowler is not None and selected_bowler == previous_bowler:
                         print(f"\n{selected_bowler.name} has bowled the previous over. Cannot bowl consecutive overs")
@@ -117,17 +103,9 @@ class Team:
                     selected_bowler.set_overs_bowled()
                     # print(f'{selected_bowler} is the selected bowler')
                     return selected_bowler
-         
-                else:
-                    print("Invalid player ID, Please select from the available players")
             
             except Exception as e:
-                print(e)
-
-    #     # selected_bowler.set_overs_bowled()
-    #     # print(f'{selected_bowler_id} is selected')
-
-    #     # return selected_bowler
+                print(f'Error in selecting bowler: {e}')
 
     
     def update_score(self, runs):
@@ -140,6 +118,5 @@ class Team:
         print("display scoreboard")
 
     def __str__(self):
-        player_info = "\n".join([str(player)
-                                for player in self.players.values()])
+        player_info = "\n".join([str(player) for player in self.players.values()])
         return f"Team: {self.name}\n Players: \n{player_info}"

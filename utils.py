@@ -1,55 +1,25 @@
-# def take_team_details():
-#     try:
-#         team_1 = {}
-        
-#         for player in range(3):
-#             player_name = input(f"Enter name for player {player+1}: ").strip()
-#             print("Select role")
-#             print("1.Batsman")
-#             print("2.Bowler")
-#             print("3.All Rounder")
-#             print("4.Wicket Keeper")
-#             print("5.Captain")
-
-#             role_choice = input("Enter role number").strip()
-
-#             role_dict = {
-#                 "1":"Batsman",
-#                 "2":"Bowler",
-#                 "3":"All Rounder",
-#                 "4":"Wicket Keeper",
-#                 "5":"Captain",
-#              }
-
-#             role = role_dict.get(role_choice)
-
-#             player = Player(player_name,role)
-            
-#             team_1[player_name] = player
-
-#             # for player in team_1.values():
-#             #     print(player)
-
+def validate_input(prompt, data_type, min_value=None, max_value=None, allowed_values=None):
     
-        
-#         team_name = input("Enter team name: ")
-#         team = Team(team_name, team_1)
+    while True:
+        try:
+            user_input = input(prompt)
+            if data_type is int:
+                user_input = int(user_input)
+            elif data_type is float:
+                user_input = float(user_input)
 
-#         print("following are the team members")
-#         print(team)
+            if min_value is not None and user_input < min_value:
+                print(f"Input must be greater than or equal to {min_value}.")
+                continue
+            if max_value is not None and user_input > max_value:
+                print(f"Input must be less than or equal to {max_value}.")
+                continue
+            if allowed_values is not None and user_input not in allowed_values:
+                print(f"Input must be one of: {allowed_values}.")
+                continue
 
-
-#     except Exception as e:
-#         print(f'Error while taking input for team players, Error is {e}')
-
-# def display_main_menu():
-#     print("----Cricket Game----")
-#     print("--Play Game--")
-#     print("--Exit--")
-
-
-# def validate_input():
-#     try:
-#         pass
-#     except Exception as e:
-#         print(e)
+            return user_input
+        except ValueError:
+            print(f"Invalid input. Please enter a value of type {data_type.__name__}.")
+        except Exception as e:
+             print(f"An unexpected error occurred while taking input: {e}")

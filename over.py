@@ -1,3 +1,5 @@
+from utils import validate_input
+
 class Over:
     def __init__(self, bowler, striker, non_striker, batting_team, bowling_team, game):
         self.bowler = bowler
@@ -15,8 +17,8 @@ class Over:
         while legal_balls < 6:
             print(
                 f"\nBall {legal_balls + 1}: Bowler: {self.bowler.name} | Striker: {self.striker.name}")
-            ball_input = input(
-                "Enter runs scored (or 'W' for Wicket, 'WD' for Wide, 'NB' for No ball): ").strip().upper()
+            ball_input = validate_input(
+                "Enter runs scored (or 'W' for Wicket, 'WD' for Wide, 'NB' for No ball): ", str)
 
             if ball_input.upper() == 'WD':
                 print("Wide ball! +1 run.")
@@ -57,9 +59,6 @@ class Over:
                         self.swap_strikers()
 
                     legal_balls += 1
-
-                except ValueError:
-                    print("Invalid input! Enter a number, W, WD, or NB.")
                 
                 except Exception as e:
                     print(f'Issue while playing over. The issue is {e}')
