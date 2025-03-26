@@ -14,36 +14,39 @@ class Game:
 
     # main function to start game
     def start_game(self):
+        try: 
+            # Setup teams
+            self.setup_teams()
 
-        # Setup teams
-        self.setup_teams()
+            # Conduct toss
+            # return the team who has or not win the toss but has to bat first
+            batting_first_team = self.conduct_toss() 
+            bowling_first_team = self.team1 if batting_first_team == self.team2 else self.team2
 
-        # Conduct toss
-        # return the team who has or not win the toss but has to bat first
-        batting_first_team = self.conduct_toss() 
-        bowling_first_team = self.team1 if batting_first_team == self.team2 else self.team2
+            # First Innings
+            self.batting_team = batting_first_team
+            self.bowling_team = bowling_first_team
 
-        # First Innings
-        self.batting_team = batting_first_team
-        self.bowling_team = bowling_first_team
+            print(f"\n--- First Innings: {self.batting_team.name} batting ---\n")
+            self.play_innings(self.batting_team, self.bowling_team)
 
-        print(f"\n--- First Innings: {self.batting_team.name} batting ---\n")
-        self.play_innings(self.batting_team, self.bowling_team)
+            # print(f"--- Stats for {self.batting_team.name} ---")
+            # self.batting_team.display_scoreboard()
 
-        # print(f"--- Stats for {self.batting_team.name} ---")
-        # self.batting_team.display_scoreboard()
+            self.target_score = self.batting_team.score + 1
+            print(f"\nTarget for {self.bowling_team.name}: {self.target_score} runs to win\n")
 
-        self.target_score = self.batting_team.score + 1
-        print(f"\nTarget for {self.bowling_team.name}: {self.target_score} runs to win\n")
+            # Second Innings
+            self.batting_team, self.bowling_team = self.bowling_team, self.batting_team
 
-        # Second Innings
-        self.batting_team, self.bowling_team = self.bowling_team, self.batting_team
+            print(f"\n--- Second Innings: {self.batting_team.name} batting ---\n")
+            self.play_innings(self.batting_team, self.bowling_team)
 
-        print(f"\n--- Second Innings: {self.batting_team.name} batting ---\n")
-        self.play_innings(self.batting_team, self.bowling_team)
-
-        # Show results
-        self.display_results()
+            # Show results
+            self.display_results()
+        
+        except Exception as e:
+            print(f'Error in start game function: {e}')
 
     # function to setup up teams
     def setup_teams(self):

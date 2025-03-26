@@ -41,91 +41,101 @@ class Team:
 
     # function to return list of batsmen who are not out and openers 
     def get_available_batsmen(self):
-        result = []
-        for player in self.players.keys():
-            if player not in self.players_who_batted:
-                result.append(player)
+        try:
+            result = []
+            for player in self.players.keys():
+                if player not in self.players_who_batted:
+                    result.append(player)
 
-        return result
+            return result
 
+        except Exception as e:
+            print(f'Error in get available function')
 
     def get_available_bowlers(self):
         pass
 
     # function to select openers
     def select_openers(self):
-        print(f"\nSelect opening batsmen for {self.name}:")
-        print()
-        # Display all players in the team
-        for player in self.players:
-            print(player)
+        try:
+            print(f"\nSelect opening batsmen for {self.name}:")
+            print()
+            # Display all players in the team
+            for player in self.players:
+                print(player)
 
-        # Take input for opener
-        while True:
-            striker_name = validate_input("Enter the Striker Name: ", str)
-            if striker_name not in self.players:
-                continue
-            self.striker = self.players[striker_name]
-            self.players_who_batted.append(self.striker.name)
-            break
+            # Take input for opener
+            while True:
+                striker_name = validate_input("Enter the Striker Name: ", str)
+                if striker_name not in self.players:
+                    continue
+                self.striker = self.players[striker_name]
+                self.players_who_batted.append(self.striker.name)
+                break
 
-        # Take inpur for Non Striker
-        while True:
-            non_striker_name = validate_input("Enter the Non Striker Name: ", str)
-            if non_striker_name not in self.players:
-                continue
-            self.non_striker = self.players[non_striker_name]
-            self.players_who_batted.append(self.non_striker.name)
-            break
+            # Take inpur for Non Striker
+            while True:
+                non_striker_name = validate_input("Enter the Non Striker Name: ", str)
+                if non_striker_name not in self.players:
+                    continue
+                self.non_striker = self.players[non_striker_name]
+                self.players_who_batted.append(self.non_striker.name)
+                break
+            
+
+            print(f"\nOpening pair for {self.name}: {self.striker.name} (Striker), {self.non_striker.name} (Non-Striker)")
+
+            return self.striker, self.non_striker
         
-
-        print(f"\nOpening pair for {self.name}: {self.striker.name} (Striker), {self.non_striker.name} (Non-Striker)")
-
-        return self.striker, self.non_striker
+        except Exception as e:
+            print(f'Error in selecting openers: {e}')
 
     def select_next_batsman(self):
         pass
 
     # the issue is that previous_bowler can bowl consecurtive overs
     def select_bowler(self, previous_bowler):
-        print()
-        print(f'Select bowler from following {self.name} team')
+        try: 
+            print()
+            print(f'Select bowler from following {self.name} team')
 
-        # self.players
+            # self.players
 
-        for player_id in self.players:
-            player = self.players[player_id]
+            for player_id in self.players:
+                player = self.players[player_id]
 
-            player_info = f'{player_id}: {player.role}, Overs Bowled: {player.overs_bowled}'
+                player_info = f'{player_id}: {player.role}, Overs Bowled: {player.overs_bowled}'
 
-            # check if the bowler has bowled previous over or not
-            # if previous_bowler is not None and previous_bowler == player:
-            #     player_info  += f'{player} bowled previous over'
+                # check if the bowler has bowled previous over or not
+                # if previous_bowler is not None and previous_bowler == player:
+                #     player_info  += f'{player} bowled previous over'
 
-            # print all bowlers info
-            print(player_info)
-            
-        while True:
-            try:
-                print()
-                selected_bowler_name = validate_input("Enter the bowler ", str)
+                # print all bowlers info
+                print(player_info)
                 
-                selected_bowler = self.players[selected_bowler_name]
-
-                # print(selected_bowler)
-
-                if previous_bowler is not None and selected_bowler == previous_bowler:
-                        print(f"\n{selected_bowler.name} has bowled the previous over. Cannot bowl consecutive overs")
-                        continue
+            while True:
+                try:
+                    print()
+                    selected_bowler_name = validate_input("Enter the bowler ", str)
                     
-                elif selected_bowler != previous_bowler:
-                    selected_bowler.set_overs_bowled()
-                    # print(f'{selected_bowler} is the selected bowler')
-                    return selected_bowler
-            
-            except Exception as e:
-                print(f'Error in selecting bowler: {e}')
+                    selected_bowler = self.players[selected_bowler_name]
 
+                    # print(selected_bowler)
+
+                    if previous_bowler is not None and selected_bowler == previous_bowler:
+                            print(f"\n{selected_bowler.name} has bowled the previous over. Cannot bowl consecutive overs")
+                            continue
+                        
+                    elif selected_bowler != previous_bowler:
+                        selected_bowler.set_overs_bowled()
+                        # print(f'{selected_bowler} is the selected bowler')
+                        return selected_bowler
+                
+                except Exception as e:
+                    print(f'Error: {e}')
+
+        except Exception as e:
+            print(f'Error in selecting bowler function: {e} ')
     
     def update_score(self, runs):
         self.score += runs
