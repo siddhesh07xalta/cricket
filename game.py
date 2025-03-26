@@ -30,6 +30,9 @@ class Game:
         print(f"\n--- First Innings: {self.batting_team.name} batting ---\n")
         self.play_innings(self.batting_team, self.bowling_team)
 
+        # print(f"--- Stats for {self.batting_team.name} ---")
+        # self.batting_team.display_scoreboard()
+
         self.target_score = self.batting_team.score + 1
         print(f"\nTarget for {self.bowling_team.name}: {self.target_score} runs to win\n")
 
@@ -39,8 +42,8 @@ class Game:
         print(f"\n--- Second Innings: {self.batting_team.name} batting ---\n")
         self.play_innings(self.batting_team, self.bowling_team)
 
-        # # Show results
-        # self.display_results()
+        # Show results
+        self.display_results()
 
     # function to setup up teams
     def setup_teams(self):
@@ -98,12 +101,17 @@ class Game:
             previous_bowler = None
 
             for over_number in range(0, self.overs):
-                
+    
                 # change it here to 10
                 if batting_team.wickets == 3:
                     print(f'Innings Over ! {batting_team.name} is all out')
                     break
         
+                
+                if self.target_score is not None and self.batting_team.score >= self.bowling_team.score:
+                    print(f'{self.batting_team.name} chased the target')
+                    return
+
                 print()
                 print(f'Over Number {over_number}')
             
@@ -111,7 +119,7 @@ class Game:
 
                 previous_bowler = bowler
                 # creating over objects with the required parameters
-                over = Over(bowler=bowler, striker=striker, non_striker=non_striker, batting_team=batting_team, bowling_team=bowling_team, over_number = over_number)
+                over = Over(bowler=bowler, striker=striker, non_striker=non_striker, batting_team=batting_team, bowling_team=bowling_team, over_number = over_number, target_score = self.target_score)
                 
                 # function that simulates playing over
                 over.play_over()
@@ -127,7 +135,36 @@ class Game:
 
             
     def display_results(self):
-        pass
+        try:
+            print()
+            print()
+            print("--- Match Results ---")
+
+            if self.batting_team.score >= self.target_score:
+                self.winner = self.batting_team
+                # change 4 to 10
+                print(f'{self.winner.name} won the match by {4 - self.batting_team.wickets} wickets !')
+                print(self.winner)
+
+            # all out
+            elif self.batting_team.wickets == 3:
+                self.winner = self.bowling_team
+                print(f'{self.winner.name} won the match by {self.target_score - self.batting_team.score}')
+                print()
+                print("Player Stats")
+                print(self.winner)
+            
+            # target not reached due to overs completion
+            else:
+                self.winner = self.bowling_team
+                print(f'{self.winner.name} won the match by {self.target_score - self.batting_team.score}')
+                print()
+                print("Player Stats")
+                print(self.winner)
+
+        except Exception as e:
+            print(f'Error in Displaying results: {e}')
+
 
     def man_of_match(self):
         pass

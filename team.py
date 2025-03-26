@@ -135,7 +135,7 @@ class Team:
 
     def display_scoreboard(self):
         print()
-        print(f'--- Stats of {self.name} after {self.overs_played}---')
+        print(f'--- Stats of {self.name} after over {self.overs_played} ---')
         print()
         print(f'Total Score: {self.score}')
         print(f'Total Wickets: {self.wickets}')
@@ -144,4 +144,4 @@ class Team:
 
     def __str__(self):
         player_info = "\n".join([str(player) for player in self.players.values()])
-        return f"Team: {self.name}\n Players: \n{player_info}"
+        return f"Team: {self.name}\nPlayers: \n{player_info}"

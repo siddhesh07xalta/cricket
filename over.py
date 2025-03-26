@@ -1,7 +1,7 @@
 from utils import validate_input
 
 class Over:
-    def __init__(self, bowler, striker, non_striker, batting_team, bowling_team, over_number):
+    def __init__(self, bowler, striker, non_striker, batting_team, bowling_team, over_number, target_score):
         self.bowler = bowler
         self.striker = striker
         self.non_striker = non_striker
@@ -9,12 +9,19 @@ class Over:
         self.bowling_team = bowling_team
         self.balls_bowled = 0
         self.over_number = over_number
+        self.target_score = target_score
+        
 
     def play_over(self):
         legal_balls = 0
         print(f"\n*** {self.bowler.name} is bowling ***")
 
         while legal_balls < 6:
+
+            if self.target_score is not None and self.batting_team.score >= self.bowling_team.score:
+                print(f'{self.batting_team.name} chased the score !')
+                return
+                
             print(f"\n Over {self.over_number} Ball {legal_balls + 1}: Striker: {self.striker.name} | Non-Striker: {self.non_striker.name} | Bowler: {self.bowler.name} |")
             # using normal input of validate input because of special case
             ball_input = input("Enter runs scored (or 'W' for Wicket, 'WD' for Wide, 'NB' for No ball): ").strip()
@@ -73,6 +80,7 @@ class Over:
 
                     print()
                     print("Runs scored till now")
+                    print(f'Total Runs: {self.batting_team.score}')
                     print(f'{self.striker.name}:{self.striker.runs}')
                     print(f'{self.non_striker.name}:{self.non_striker.runs}')
 
