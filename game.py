@@ -187,6 +187,8 @@ class Game:
                 self.winner = self.batting_team
                 print(f'{self.winner.name} won the match by {len(self.winner.players) - 1 - self.batting_team.wickets} wickets!')
             
+            elif self.batting_team.score == self.bowling_team.score:
+                self.super_over(self.batting_team, self.bowling_team)
             elif self.batting_team.wickets == len(self.batting_team.players) - 1:
                 self.winner = self.bowling_team
                 print(f'{self.winner.name} won the match by {self.target_score - self.batting_team.score} runs!')
@@ -205,3 +207,128 @@ class Game:
 
     def highest_wicket_taker(self):
         pass
+
+
+    def super_over(self, team1, team2):
+        print("\n==============================")
+        print("🚨 MATCH TIED! SUPER OVER TIME! 🚨")
+        print("==============================\n")
+
+        super_over_limit = 6  # 1 over = 6 balls
+        team1_super_score, team2_super_score = 0, 0
+
+        # Batting Order for Super Over
+        print(f"Select 2 batsmen for {team1.name}'s Super Over:")
+        striker_name = input("Enter the Striker Name: ")
+        non_striker_name = input("Enter the Non Striker Name: ")
+        striker = team1.players[striker_name]
+        non_striker = team1.players[non_striker_name]
+
+        print(f"Select a bowler for {team2.name}'s Super Over:")
+        bowler_name = input("Enter the bowler: ")
+        bowler = team2.players[bowler_name]
+
+        # Team 1 Batting Super Over
+        for ball in range(1, super_over_limit + 1):
+            print(f"Over 0.{ball}: Striker: {striker.name} | Bowler: {bowler.name}")
+            outcome = input("Enter runs scored (or 'W' for Wicket, 'WD' for Wide, 'NB' for No ball): ")
+
+            if outcome.upper() == "W":
+                print(f"{striker.name} is OUT!")
+                break  # End if both batsmen are out
+            elif outcome.upper() in ["WD", "NB"]:
+                team1_super_score += 1  # Extra run for Wide/No Ball
+                continue  # Re-bowl the delivery
+            else:
+                runs = int(outcome)
+                team1_super_score += runs
+                striker.bat(runs)
+
+            if runs % 2 != 0:
+                striker, non_striker = non_striker, striker
+
+        print(f"{team1.name} Super Over Score: {team1_super_score} runs")
+
+        # Reset for Team 2's Batting
+        print(f"\nSelect 2 batsmen for {team2.name}'s Super Over:")
+        striker_name = input("Enter the Striker Name: ")
+        non_striker_name = input("Enter the Non Striker Name: ")
+        striker = team2.players[striker_name]
+        non_striker = team2.players[non_striker_name]
+
+        print(f"Select a bowler for {team1.name}'s Super Over:")
+        bowler_name = input("Enter the bowler: ")
+        bowler = team1.players[bowler_name]
+
+        # Team 2 Batting Super Over
+        for ball in range(1, super_over_limit + 1):
+            print(f"Over 0.{ball}: Striker: {striker.name} | Bowler: {bowler.name}")
+            outcome = input("Enter runs scored (or 'W' for Wicket, 'WD' for Wide, 'NB' for No ball): ")
+
+            if outcome.upper() == "W":
+                print(f"{striker.name} is OUT!")
+                break
+            elif outcome.upper() in ["WD", "NB"]:
+                team2_super_score += 1
+                continue
+            else:
+                runs = int(outcome)
+                team2_super_score += runs
+                striker.bat(runs)
+
+            if runs % 2 != 0:
+                striker, non_striker = non_striker, striker
+
+            # If Team 2 surpasses Team 1's score, they win immediately
+            if team2_super_score > team1_super_score:
+                print(f"{team2.name} wins the Super Over!")
+                self.print_winning_team_dashboard(team2)
+                return
+
+        print(f"{team2.name} Super Over Score: {team2_super_score} runs")
+
+        # Final Decision: Compare Scores or Check Boundaries
+        if team1_super_score > team2_super_score:
+            print(f"{team1.name} wins the Super Over! 🎉")
+            self.print_winning_team_dashboard(team1)
+        elif team2_super_score > team1_super_score:
+            print(f"{team2.name} wins the Super Over! 🎉")
+            self.print_winning_team_dashboard(team2)
+        else:
+            print("\n🏏 The Super Over is also a TIE! Comparing boundary count...")
+
+            # Calculate boundaries
+            team1_boundaries = sum(player.fours + player.sixes for player in team1.players.values())
+            team2_boundaries = sum(player.fours + player.sixes for player in team2.players.values())
+
+            if team1_boundaries > team2_boundaries:
+                print(f"🏆 {team1.name} wins by boundary count! (Boundaries: {team1_boundaries})")
+                self.print_winning_team_dashboard(team1)
+            elif team2_boundaries > team1_boundaries:
+                print(f"🏆 {team2.name} wins by boundary count! (Boundaries: {team2_boundaries})")
+                self.print_winning_team_dashboard(team2)
+            else:
+                print("🚨 BOUNDARIES ARE ALSO EQUAL , IT'S A TIE!")
+
+
+    def print_winning_team_dashboard(team):
+        print("\n================================================================================")
+        print(f" {team.name} - Winning Scorecard ")
+        print("================================================================================")
+        print("||  Player Name      ||  Runs  ||  Balls  ||  Fours  ||  Sixes  ||  SR  ||")
+        print("================================================================================")
+        
+        for player in team.players.values():
+            sr = (player.runs / player.balls_faced * 100) if player.balls_faced > 0 else 0
+            print(f"||  {player.name:<15} ||  {player.runs:<5}  ||  {player.balls_faced:<5}  ||  {player.fours:<5}  ||  {player.sixes:<5}  ||  {sr:.2f}  ||")
+
+        print("\n================================================================================")
+        print("||  Bowler Name      ||  Overs  ||  Wickets  ||  Runs  ||  Econ  ||")
+        print("================================================================================")
+
+        for player in team.players.values():
+            if player.overs_bowled > 0:
+                economy = player.runs_conceded / player.overs_bowled if player.overs_bowled > 0 else 0
+                print(f"||  {player.name:<15} ||  {player.overs_bowled:<5}  ||  {player.wickets_taken:<5}  ||  {player.runs_conceded:<5}  ||  {economy:.2f}  ||")
+
+        print("================================================================================\n")
