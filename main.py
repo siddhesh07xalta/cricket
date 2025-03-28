@@ -4,7 +4,7 @@ from utils import validate_input
 def main():
     try:
         print("Welcome to Cricket Game !")
-        number_of_overs = validate_input("Enter number of overs you want to play :  ", str)
+        number_of_overs = validate_input("Enter number of overs you want to play :  ", int)
         # game class 
         game = Game(number_of_overs)
 

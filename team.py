@@ -2,42 +2,35 @@ from player import Player
 from utils import validate_input
 
 class Team:
-    def __init__(self, name):
+    def __init__(self, name, num_players):
         self.name = name
         self.players = {}
         self.score = 0
         self.wickets = 0
         self.overs_played = 0
         self.players_who_batted = []
+        self.num_players = num_players  
 
     def add_player(self):
         try:
-            players = 11
-
-            # currently only 4 playeres, need to update it to 11
-            for player in range(4):
+            for player in range(self.num_players):
                 player_name = validate_input(f"Enter name for player {player+1}: ", str)
-                print()
-                print("Select role")
+                print("\nSelect role")
                 print("1.Batsman")
                 print("2.Bowler")
+                print("3.WicketKeeper")
+                print("4.Captain")
 
-                role_choice = validate_input("Enter role number: ", int, 1,2,(1,2))
-
-                role_dict = {
-                    1: "Batsman",
-                    2: "Bowler"
-                }
-
+                role_choice = validate_input("Enter role number: ", int, 1, 4, (1,2,3, 4))
+                role_dict = {1: "Batsman", 2: "Bowler", 3: 'WicketKeeper', 4:'Captain'}
                 role = role_dict.get(role_choice)
 
                 player = Player(player_name, role)
-
                 self.players[player_name] = player
 
-            # print(self.players)
         except Exception as e:
-            print(f'Error while taking input for team players, Error is {e}')
+            print(f'Error while adding players: {e}')
+
 
     # function to return list of batsmen who are not out and openers 
     def get_available_batsmen(self):

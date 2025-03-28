@@ -10,7 +10,7 @@ def validate_input(prompt, data_type, min_value=None, max_value=None, allowed_va
                 user_input = float(user_input)
             elif data_type is str:
                 if user_input.isalpha():
-                    user_input = str(user_input).strip()
+                    user_input = str(user_input).strip().lower()
                 else:
                     raise ValueError
 

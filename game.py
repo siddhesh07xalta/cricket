@@ -50,17 +50,15 @@ class Game:
 
     # function to setup up teams
     def setup_teams(self):
-
         try:
             team_1_name = validate_input("Enter Team 1 name: ", str)
             team_2_name = validate_input("Enter Team 2 name: ", str)
+            number_of_players = validate_input("Enter number of players per team: ", int, 2, 11) 
 
-            # creating team objects
-            self.team1 = Team(team_1_name)
-            self.team2 = Team(team_2_name)
+            self.team1 = Team(team_1_name, number_of_players)
+            self.team2 = Team(team_2_name, number_of_players)
 
             print(f"\nEnter details for {team_1_name}:")
-            # function to add players
             self.team1.add_player()
             print()
 
@@ -70,103 +68,137 @@ class Game:
         except Exception as e:
             print(f'Error in setup teams function: {e}')
 
+
     # function for conducting toss
     def conduct_toss(self):
-
         try:
-            toss_winner = random.choice([self.team1, self.team2])
-            print(f"\n{toss_winner.name} won the toss!")
+            print("\n--- Toss Time! ---\n")
 
-            choice = validate_input(f"What does {toss_winner.name} want to do?\n1.Bat\n0.Bowl\nChoice: ", int, 0,1, (1,0))
+            # Identify captains
+            captains = []
+            for team in [self.team1, self.team2]:
+                for player_name, player in team.players.items():
+                    if player.role == "Captain":
+                        captains.append((player_name, team))
 
-            # conidition to select the batting team first
-            if choice == 1:
-                batting_first_team = toss_winner
+            # Ensure both teams have captains
+            if len(captains) < 2:
+                print("Error: Both teams must have a captain to conduct the toss.")
+                
+
+            # Assign captains
+            tossing_captain, tossing_team = captains[0]
+            calling_captain, calling_team = captains[1]
+
+            # User selects who tosses and who calls
+            print(f"Captains: {tossing_captain} ({tossing_team.name}) & {calling_captain} ({calling_team.name})")
+            print("Who should toss the coin in the air?")
+            print(f"1. {tossing_captain} ({tossing_team.name})")
+            print(f"2. {calling_captain} ({calling_team.name})")
+
+            toss_choice = validate_input("Enter choice (1 or 2): ", int, 1, 2)
+
+            if toss_choice == 2:
+                tossing_captain, calling_captain = calling_captain, tossing_captain
+                tossing_team, calling_team = calling_team, tossing_team
+
+            print(f"\n{tossing_captain} ({tossing_team.name}) will toss the coin.")
+            print(f"{calling_captain} ({calling_team.name}) will call for the toss.")
+
+            # Calling the toss
+            print("\nTossing the coin... *flips coin in the air*")
+            print(f"{calling_captain} ({calling_team.name}), call Heads or Tails!")
+
+            call = validate_input("Enter 'Heads' or 'Tails': ", str)
+            coin_result = random.choice(["Heads", "Tails"])
+
+            print(f"\nThe coin lands... It's {coin_result}!")
+
+            # Determine winner
+            if call == coin_result:
+                print(f"\n{calling_captain} ({calling_team.name}) wins the toss!")
+                toss_winner = calling_team
             else:
-                batting_first_team = self.team1 if toss_winner == self.team2 else self.team2
+                print(f"\n{tossing_captain} ({tossing_team.name}) wins the toss!")
+                toss_winner = tossing_team
 
-            print(f"\n{batting_first_team.name} will bat first.\n")
-            return batting_first_team
+            # Toss-winning captain decides batting or bowling
+            print(f"\n{toss_winner.name} won the toss! What would you like to do?")
+            print("1. Bat first")
+            print("2. Bowl first")
+
+            decision = validate_input("Enter choice (1 or 2): ", int, 1, 2)
+
+            if decision == 1:
+                batting_team = toss_winner
+                bowling_team = self.team1 if toss_winner == self.team2 else self.team2
+                print(f"\n{toss_winner.name} elects to bat first!")
+            else:
+                batting_team = self.team1 if toss_winner == self.team2 else self.team2
+                bowling_team = toss_winner
+                print(f"\n{toss_winner.name} elects to bowl first! {batting_team.name} will bat first.")
+
+            return batting_team  # Return the batting team
 
         except Exception as e:
-            print(f'Error in conduct_toss function: {e}')
+            print(f"Error during toss: {e}")
+            return None
 
     # function to play innings
     def play_innings(self, batting, bowling):
-
         try:
             batting_team = batting
             bowling_team = bowling
-
-            # selecting striker and non striker 
             striker, non_striker = batting_team.select_openers()
-
             previous_bowler = None
 
-            for over_number in range(0, self.overs):
-    
-                # change it here to 10
-                if batting_team.wickets == 3:
-                    print(f'Innings Over ! {batting_team.name} is all out')
+            for over_number in range(self.overs):
+                if batting_team.wickets == len(batting_team.players) - 1:  # All players out
+                    print(f'Innings Over! {batting_team.name} is all out')
                     break
-        
-                
-                if self.target_score is not None and self.batting_team.score >= self.bowling_team.score:
-                    print(f'{self.batting_team.name} chased the target')
+
+                if self.target_score is not None and batting_team.score >= bowling_team.score:
+                    print(f'{batting_team.name} chased the target!')
                     return
 
-                print()
-                print(f'Over Number {over_number}')
-            
+                print(f'\nOver Number {over_number}')
                 bowler = bowling_team.select_bowler(previous_bowler)
-
                 previous_bowler = bowler
-                # creating over objects with the required parameters
-                over = Over(bowler=bowler, striker=striker, non_striker=non_striker, batting_team=batting_team, bowling_team=bowling_team, over_number = over_number, target_score = self.target_score)
-                
-                # function that simulates playing over
+
+                over = Over(
+                    bowler=bowler, striker=striker, non_striker=non_striker,
+                    batting_team=batting_team, bowling_team=bowling_team,
+                    over_number=over_number, target_score=self.target_score
+                )
+
                 over.play_over()
-
-                # adding over count to team function
                 batting_team.overs_played += 1
-
-                # print batting dashboard after every over
                 batting_team.display_scoreboard()
-        
+                
         except Exception as e:
             print(f'Error in play innings function: {e}')
 
-            
+
     def display_results(self):
         try:
-            print()
-            print()
-            print("--- Match Results ---")
-
+            print("\n--- Match Results ---")
+            
             if self.batting_team.score >= self.target_score:
                 self.winner = self.batting_team
-                # change 4 to 10
-                print(f'{self.winner.name} won the match by {4 - self.batting_team.wickets} wickets !')
-                print(self.winner)
-
-            # all out
-            elif self.batting_team.wickets == 3:
-                self.winner = self.bowling_team
-                print(f'{self.winner.name} won the match by {self.target_score - self.batting_team.score}')
-                print()
-                print("Player Stats")
-                print(self.winner)
+                print(f'{self.winner.name} won the match by {len(self.winner.players) - 1 - self.batting_team.wickets} wickets!')
             
-            # target not reached due to overs completion
+            elif self.batting_team.wickets == len(self.batting_team.players) - 1:
+                self.winner = self.bowling_team
+                print(f'{self.winner.name} won the match by {self.target_score - self.batting_team.score} runs!')
+
             else:
                 self.winner = self.bowling_team
-                print(f'{self.winner.name} won the match by {self.target_score - self.batting_team.score}')
-                print()
-                print("Player Stats")
-                print(self.winner)
-
+                print(f'{self.winner.name} won the match by {self.target_score - self.batting_team.score} runs!')
+            
+            print("\nPlayer Stats")
+            print(self.winner)
         except Exception as e:
-            print(f'Error in Displaying results: {e}')
+            print(f'Error in displaying results: {e}')
 
 
     def man_of_match(self):
