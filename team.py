@@ -136,14 +136,35 @@ class Team:
     def increment_wickets(self):
         self.wickets += 1
 
-    def display_scoreboard(self):
-        print()
-        print(f'--- Stats of {self.name} after over {self.overs_played} ---')
-        print()
-        print(f'Total Score: {self.score}')
-        print(f'Total Wickets: {self.wickets}')
-        print(f'Overs Played: {self.overs_played}  ')
-        print(f'Players who batted till now: {self.players_who_batted}')
+    def display_ball_scoreboard(self, bowler, striker, non_striker, over_number, ball_number):
+        print("\n" + "-" * 60)
+        print(f"||  Over {over_number}.{ball_number}  ||  {self.name}  ||  {self.score}/{self.wickets}  ||")
+        print("-" * 60)
+        print(f"||  Batting: {self.name}  ||  Bowling: {bowler.name} ||")
+        print(f"||  Striker: {striker.name} ({striker.runs} runs, {striker.balls_faced} balls, SR: {striker.strike_rate:.2f})  ||  Non-Striker: {non_striker.name} ({non_striker.runs} runs, {non_striker.balls_faced} balls)  ||")
+        print(f"||  Bowler: {bowler.name} ({bowler.overs_bowled} overs, {bowler.wickets_taken} wickets, Economy: {bowler.economy:.2f})  ||")
+        print("-" * 60)
+
+
+    def display_detailed_scoreboard(self):
+        print("\n" + "=" * 80)
+        print(f"||  {self.name} - Scorecard  ||  Total: {self.score}/{self.wickets}  ||  Overs: {self.overs_played}  ||")
+        print("=" * 80)
+        print("||  Player Name      ||  Runs  ||  Balls  ||  Fours  ||  Sixes  ||  SR  ||")
+        print("=" * 80)
+
+        for player in self.players.values():
+            if player.balls_faced > 0:  # Show only players who have batted
+                print(f"||  {player.name:15} ||  {player.runs:5}  ||  {player.balls_faced:5}  ||  {player.fours:5}  ||  {player.sixes:5}  ||  {player.strike_rate:.2f}  ||")
+
+       
+        # print("||  Bowler Name      ||  Overs  ||  Wickets  ||  Runs  ||  Econ  ||")
+        # print("=" * 60)
+
+        # for player in self.players.values():
+
+        #     print(f"||  {player.name:15} ||  {player.overs_bowled:5}  ||  {player.wickets_taken:5}  ||  {player.runs_conceded:5}  ||  {player.economy:.2f}  ||")
+        #     print("=" * 80)
 
     def __str__(self):
         player_info = "\n".join([str(player) for player in self.players.values()])

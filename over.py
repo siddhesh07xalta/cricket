@@ -19,24 +19,26 @@ class Over:
 
             while legal_balls < 6:
 
-                if self.target_score is not None and self.batting_team.score >= self.bowling_team.score:
-                    print(f'{self.batting_team.name} chased the score !')
+                if self.target_score is not None and self.batting_team.score > self.bowling_team.score:
+                    print(f'{self.batting_team.name} chased the target!')
                     return
                     
-                print(f"\n Over {self.over_number} Ball {legal_balls + 1}: Striker: {self.striker.name} | Non-Striker: {self.non_striker.name} | Bowler: {self.bowler.name} |")
-                # using normal input of validate input because of special case
+                print(f"\nOver {self.over_number} Ball {legal_balls + 1}: Striker: {self.striker.name} | Non-Striker: {self.non_striker.name} | Bowler: {self.bowler.name}")
+                
                 ball_input = input("Enter runs scored (or 'W' for Wicket, 'WD' for Wide, 'NB' for No ball): ").strip()
 
                 if ball_input.upper() == 'WD':
                     print("Wide ball! +1 run.")
                     self.batting_team.update_score(1)
                     self.bowler.bowl(1)
+                    self.batting_team.display_ball_scoreboard(self.bowler, self.striker, self.non_striker, self.over_number, legal_balls)
                     continue
 
                 elif ball_input.upper() == 'NB':
                     print("No ball! +1 run.")
                     self.batting_team.update_score(1)
                     self.bowler.bowl(1)
+                    self.batting_team.display_ball_scoreboard(self.bowler, self.striker, self.non_striker, self.over_number, legal_balls)
                     continue
 
                 elif ball_input.upper() == 'W':
@@ -44,32 +46,20 @@ class Over:
                     self.striker.is_out = True
                     self.batting_team.increment_wickets()
                     self.bowler.wicket()
-                    
-                    # gets all the batsmen who are not out
+
                     next_batsman = self.batting_team.get_available_batsmen()
         
                     if len(next_batsman) == 0:
-                            return 
+                        return 
                         
-                    print()
-                    print("Following are the available batsman")
+                    print("\nAvailable batsmen:")
                     for available_batsman in next_batsman:
                         print(available_batsman)
                         
-                    self.all_players = self.batting_team.players
-
-                    print()
                     next_batsman_name = validate_input("Enter batsman from above players: ", str)
-
-                    # getting batsman object from the dictionary using name(key)
-                    next_batsman = self.all_players[next_batsman_name]
-                    # setting the striker to new batsman object
+                    next_batsman = self.batting_team.players[next_batsman_name]
                     self.striker = next_batsman
-
-                    # appending the new striker to the list who have batted
                     self.batting_team.players_who_batted.append(next_batsman_name)
-
-                    # increasing the balls
                     legal_balls += 1
 
                 else:
@@ -79,27 +69,26 @@ class Over:
                         self.batting_team.update_score(runs)
                         self.bowler.bowl(runs)
 
-                        print()
-                        print("Runs scored till now")
-                        print(f'Total Runs: {self.batting_team.score}')
-                        print(f'{self.striker.name}:{self.striker.runs}')
-                        print(f'{self.non_striker.name}:{self.non_striker.runs}')
+                        if runs == 4:
+                            self.striker.fours += 1
+                        elif runs == 6:
+                            self.striker.sixes += 1
 
                         if runs % 2 == 1:
-                            # Odd run: rotate strike
-                            print("strike change")
                             self.swap_strikers()
 
                         legal_balls += 1
-                
+                    
                     except Exception as e:
                         print(f'Issue while selecting option. The issue is {e}')
+                
+                # **Show scoreboard after every ball**
+                self.batting_team.display_ball_scoreboard(self.bowler, self.striker, self.non_striker, self.over_number, legal_balls)
 
-        
-            print("strike change")
             self.swap_strikers()
+
         except Exception as e:
-            print('Isue while playing over. The issue is {e}')
+            print(f'Issue while playing over: {e}')
 
 
     def swap_strikers(self):

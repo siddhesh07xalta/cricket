@@ -157,7 +157,7 @@ class Game:
                     print(f'Innings Over! {batting_team.name} is all out')
                     break
 
-                if self.target_score is not None and batting_team.score >= bowling_team.score:
+                if self.target_score is not None and batting_team.score > bowling_team.score:
                     print(f'{batting_team.name} chased the target!')
                     return
 
@@ -173,7 +173,7 @@ class Game:
 
                 over.play_over()
                 batting_team.overs_played += 1
-                batting_team.display_scoreboard()
+                batting_team.display_detailed_scoreboard()
                 
         except Exception as e:
             print(f'Error in play innings function: {e}')
@@ -195,8 +195,7 @@ class Game:
                 self.winner = self.bowling_team
                 print(f'{self.winner.name} won the match by {self.target_score - self.batting_team.score} runs!')
             
-            print("\nPlayer Stats")
-            print(self.winner)
+            
         except Exception as e:
             print(f'Error in displaying results: {e}')
 
