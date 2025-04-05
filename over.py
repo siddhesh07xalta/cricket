@@ -22,7 +22,11 @@ class Over:
                 if self.target_score is not None and self.batting_team.score > self.bowling_team.score:
                     print(f'{self.batting_team.name} chased the target!')
                     return
-                    
+                
+                if self.target_score is not None and self.batting_team.score == self.bowling_team.score:
+                    print(f'Match Tied')
+                    return
+                
                 print(f"\nOver {self.over_number} Ball {legal_balls + 1}: Striker: {self.striker.name} | Non-Striker: {self.non_striker.name} | Bowler: {self.bowler.name}")
                 
                 ball_input = input("Enter runs scored (or 'W' for Wicket, 'WD' for Wide, 'NB' for No ball): ").strip()
