@@ -1,4 +1,4 @@
-from utils import validate_input
+from utils import validate_input, validate_ball_outcome, validate_player_selection
 
 class Over:
     def __init__(self, bowler, striker, non_striker, batting_team, bowling_team, over_number, target_score):
@@ -20,32 +20,28 @@ class Over:
             while legal_balls < 6:
 
                 if self.target_score is not None and self.batting_team.score > self.bowling_team.score:
-                    print(f'{self.batting_team.name} chased the target!')
-                    return
-                
-                if self.target_score is not None and self.batting_team.score == self.bowling_team.score:
-                    print(f'Match Tied')
+                    # print(f'{self.batting_team.name} chased the target!')
                     return
                 
                 print(f"\nOver {self.over_number} Ball {legal_balls + 1}: Striker: {self.striker.name} | Non-Striker: {self.non_striker.name} | Bowler: {self.bowler.name}")
-                
-                ball_input = input("Enter runs scored (or 'W' for Wicket, 'WD' for Wide, 'NB' for No ball): ").strip()
+                                
+                ball_input = validate_ball_outcome()
 
-                if ball_input.upper() == 'WD':
+                if ball_input == 'WD':
                     print("Wide ball! +1 run.")
                     self.batting_team.update_score(1)
                     self.bowler.bowl(1)
                     self.batting_team.display_ball_scoreboard(self.bowler, self.striker, self.non_striker, self.over_number, legal_balls)
                     continue
 
-                elif ball_input.upper() == 'NB':
+                elif ball_input == 'NB':
                     print("No ball! +1 run.")
                     self.batting_team.update_score(1)
                     self.bowler.bowl(1)
                     self.batting_team.display_ball_scoreboard(self.bowler, self.striker, self.non_striker, self.over_number, legal_balls)
                     continue
 
-                elif ball_input.upper() == 'W':
+                elif ball_input== 'W':
                     print(f"{self.striker.name} is OUT!")
                     self.striker.is_out = True
                     self.batting_team.increment_wickets()
@@ -61,14 +57,15 @@ class Over:
                         print(available_batsman)
                         
                     next_batsman_name = validate_input("Enter batsman from above players: ", str)
-                    next_batsman = self.batting_team.players[next_batsman_name]
+                    next_batsman = validate_player_selection(self.batting_team.players, "Enter batsman from above players: ")
+                    
                     self.striker = next_batsman
                     self.batting_team.players_who_batted.append(next_batsman_name)
                     legal_balls += 1
 
                 else:
                     try:
-                        runs = int(ball_input)
+                        runs = ball_input
                         self.striker.bat(runs)
                         self.batting_team.update_score(runs)
                         self.bowler.bowl(runs)
@@ -86,7 +83,7 @@ class Over:
                     except Exception as e:
                         print(f'Issue while selecting option. The issue is {e}')
                 
-                # **Show scoreboard after every ball**
+                # Show scoreboard after every ball
                 self.batting_team.display_ball_scoreboard(self.bowler, self.striker, self.non_striker, self.over_number, legal_balls)
 
             self.swap_strikers()

@@ -37,9 +37,6 @@ finally, the match result
 
 take a list of commentary (make different sections) and randomize in between the print
 
-player of the match
-highest wicket taker
-
 print status of each ball
 
 can caclulate strike rate of batsman

@@ -29,3 +29,36 @@ def validate_input(prompt, data_type, min_value=None, max_value=None, allowed_va
             print(f"Invalid input. Please enter a value of type {data_type.__name__}.")
         except Exception as e:
              print(f"An unexpected error occurred while taking input: {e}")
+
+
+def validate_player_selection(players, prompt, players_dict=None):
+
+    while True:
+        # Case 1: players is a dict {name: Player}
+        if isinstance(players, dict):
+            print("Available players:", [player.name for player in players.values()])
+            player_name = validate_input(prompt, str)
+            if player_name in players:
+                return players[player_name]
+
+        # Case 2: players is a list of names, lookup in players_dict
+        elif isinstance(players, list):
+            print("Available players:", players)
+            player_name = validate_input(prompt, str)
+            if player_name in players and players_dict and player_name in players_dict:
+                return players_dict[player_name]
+
+        print("Invalid player name! Please select a valid player.")
+
+
+
+def validate_ball_outcome():
+    """Reusable function to validate and process ball outcome."""
+    while True:
+        outcome = input("Enter runs scored (or 'W' for Wicket, 'WD' for Wide, 'NB' for No ball): ")
+        if outcome in ['W', 'WD', 'NB', 'w', 'wd', 'nb']:
+            return outcome.upper()
+        elif outcome.isdigit() and 0 <= int(outcome) <= 6:
+            return int(outcome)
+        else:
+            print("Invalid input! Please enter a valid outcome.")

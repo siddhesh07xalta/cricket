@@ -1,7 +1,8 @@
 from team import Team
 from over import Over
+from super_over import SuperOver
 import random
-from utils import validate_input
+from utils import validate_input, validate_ball_outcome, validate_player_selection
 
 class Game:
     def __init__(self, overs):
@@ -106,15 +107,23 @@ class Game:
 
             # Calling the toss
             print("\nTossing the coin... *flips coin in the air*")
-            print(f"{calling_captain} ({calling_team.name}), call Heads or Tails!")
+            print(f"{calling_captain} ({calling_team.name}), call 1 for Heads or 2 for Tails!")
 
-            call = validate_input("Enter 'Heads' or 'Tails': ", str)
-            coin_result = random.choice(["Heads", "Tails"])
+            call = validate_input("Enter 1 for Heads or 2 for Tails!: ", int, 1,2, (1,2))
+            coin_result = random.choice([1,2])
 
-            print(f"\nThe coin lands... It's {coin_result}!")
+            coin = ""
+
+            if coin_result == 1: 
+                coin = "Heads"
+            else:
+                coin = "Tails"
+
+            print(f"\nThe coin lands... It's {coin})!")
 
             # Determine toss winner
             if call == coin_result:
+                # heads
                 print(f"\n{calling_captain} ({calling_team.name}) wins the toss!")
                 toss_winner = calling_team
             else:
@@ -141,7 +150,6 @@ class Game:
 
         except Exception as e:
             print(f"Error during toss: {e}")
-            return None
 
     # Function to play innings
     def play_innings(self, batting, bowling):
@@ -160,8 +168,8 @@ class Game:
                     print(f'{batting_team.name} chased the target!')
                     return
                 
-                if self.target_score is not None and batting_team.score == bowling_team.score:
-                    return
+                # if self.target_score is not None and batting_team.score == bowling_team.score:
+                #     return
 
                 print(f'\nOver Number {over_number}')
                 bowler = bowling_team.select_bowler(previous_bowler)
@@ -190,7 +198,10 @@ class Game:
                 print(f'{self.winner.name} won the match by {len(self.winner.players) - 1 - self.batting_team.wickets} wickets!')
             
             elif self.batting_team.score == self.bowling_team.score:
-                self.super_over(self.batting_team, self.bowling_team)
+                # self.super_over(self.batting_team, self.bowling_team)
+                super_over = SuperOver(team1= self.batting_team, team2= self.bowling_team)
+                super_over.play_and_display_super_overs()
+            
             elif self.batting_team.wickets == len(self.batting_team.players) - 1:
                 self.winner = self.bowling_team
                 print(f'{self.winner.name} won the match by {self.target_score - self.batting_team.score} runs!')
@@ -199,20 +210,9 @@ class Game:
                 self.winner = self.bowling_team
                 print(f'{self.winner.name} won the match by {self.target_score - self.batting_team.score} runs!')
         
-
-
-            self.print_winning_team_dashboard(self.batting_team)
-            self.print_winning_team_dashboard(self.bowling_team)
+            self.batting_team.display_detailed_scoreboard()
+            self.bowling_team.display_detailed_scoreboard()
             
         except Exception as e:
             print(f'Error in displaying results: {e}')
 
-
-    def super_over(self, team1, team2):
-        # Super over logic
-        pass
-
-
-    def print_winning_team_dashboard(self, team):
-        # Print team stats
-        pass

@@ -1,5 +1,5 @@
 from player import Player
-from utils import validate_input
+from utils import validate_input, validate_player_selection, validate_ball_outcome
 
 class Team:
     def __init__(self, name, num_players):
@@ -62,65 +62,42 @@ class Team:
     def select_openers(self):
         try:
             print(f"\nSelect opening batsmen for {self.name}:")
-            # Display all players in the team
-            for player in self.players:
-                print(player)
 
-            # Take input for opener (striker)
-            while True:
-                striker_name = validate_input("Enter the Striker Name: ", str)
-                if striker_name not in self.players:
-                    continue
-                self.striker = self.players[striker_name]
-                self.players_who_batted.append(self.striker.name)
-                break
+            self.striker = validate_player_selection(self.players, "Enter the Striker Name: ")
+            self.players_who_batted.append(self.striker.name)
 
-            # Take input for non-striker
-            while True:
-                non_striker_name = validate_input("Enter the Non Striker Name: ", str)
-                if non_striker_name not in self.players:
-                    continue
-                self.non_striker = self.players[non_striker_name]
-                self.players_who_batted.append(self.non_striker.name)
-                break
+            self.non_striker = validate_player_selection(self.get_available_batsmen(), "Enter the Non Striker Name: ", players_dict=self.players)
+            self.players_who_batted.append(self.non_striker.name)
 
             print(f"\nOpening pair for {self.name}: {self.striker.name} (Striker), {self.non_striker.name} (Non-Striker)")
 
             return self.striker, self.non_striker
-        
+            
         except Exception as e:
-            print(f'Error in selecting openers: {e}')
-
+                print(f'Error in selecting openers: {e}')
+    
+    
     # Function to select a bowler from the available bowlers in the team
     def select_bowler(self, previous_bowler):
         try: 
             print(f'\nSelect bowler from following {self.name} team:')
-            # Display all players and their bowling details
             for player_id in self.players:
                 player = self.players[player_id]
-                player_info = f'{player_id}: {player.role}, Overs Bowled: {player.overs_bowled}'
-                print(player_info)
-                
+                print(f'{player_id}: {player.role}, Overs Bowled: {player.overs_bowled}')
+
             while True:
-                try:
-                    selected_bowler_name = validate_input("Enter the bowler: ", str)
-                    selected_bowler = self.players[selected_bowler_name]
+                selected_bowler = validate_player_selection(self.players, "Enter the bowler: ")
 
-                    # Check if the selected bowler is the same as the previous bowler
-                    if previous_bowler is not None and selected_bowler == previous_bowler:
-                        print(f"\n{selected_bowler.name} has bowled the previous over. Cannot bowl consecutive overs.")
-                        continue
-                    
-                    # If the selected bowler is valid, set the overs bowled and return the bowler
-                    selected_bowler.set_overs_bowled()
-                    return selected_bowler
-
-                except Exception as e:
-                    print(f'Error: {e}')
+                if previous_bowler is not None and selected_bowler == previous_bowler:
+                    print(f"\n{selected_bowler.name} has bowled the previous over. Cannot bowl consecutive overs.")
+                    continue
+                
+                selected_bowler.set_overs_bowled()
+                return selected_bowler
 
         except Exception as e:
             print(f'Error in selecting bowler function: {e}')
-    
+            
     # Function to update team score
     def update_score(self, runs):
         self.score += runs
